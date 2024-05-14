@@ -46,4 +46,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.github.Jay-Goo:RangeSeekBar:v3.0.0")
 }

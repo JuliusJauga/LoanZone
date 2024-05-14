@@ -71,6 +71,12 @@ public class MainActivity extends AppCompatActivity implements OnDataPassListene
             }
             return true;
         });
+        binding.navView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // todo
+            }
+        });
 
     }
     public static Fields getInput() {

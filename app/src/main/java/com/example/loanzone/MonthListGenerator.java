@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MonthListGenerator {
-    private static Fields givenFields;
+    private static Fields givenFields = null;
     public static void setFields(Fields other) {
         givenFields = other;
     }
     public static List<Month> generateList() {
         if (givenFields.isAnnuity()) return getAnnuityList();
-        else if (givenFields.isLinear()) return getLinearList();
+        else if (givenFields.isLinear()) return getAnnuityList();
         return null;
     }
     private static List<Month> getLinearList() {
@@ -29,7 +29,7 @@ public class MonthListGenerator {
                     monthlyPayment = 0;
                     counter++;
                 }
-                else if (givenFields.getPost_pone_start() == month && month > 1 && givenFields.getPost_pone_end() < givenFields.getDuration()) {
+                else if (givenFields.getPost_pone_end() == month && month > 1 && givenFields.getPost_pone_end() < givenFields.getDuration()) {
                     remainingMortgage += remainingMortgage * counter * monthlyInterestRate;
                     monthlyReduction = remainingMortgage / givenFields.getDuration();
                     monthlyPayment = monthlyReduction + remainingMortgage * monthlyInterestRate;
@@ -70,26 +70,27 @@ public class MonthListGenerator {
         }
         else return new ArrayList<>();
     }
-    private static List<Month> getAnnuityList() {
+    public static List<Month> getAnnuityList() {
         double monthlyInterestRate = givenFields.getAnnual_percentage() / 12 / 100;
-        double monthlyPayment = ((givenFields.getLoan_amount() - givenFields.getDown_payment()) * monthlyInterestRate) / (1 - Math.pow((1+monthlyInterestRate), -givenFields.getDuration()));
+        int totalMonths = givenFields.getDuration();
+        double monthlyPayment = ((givenFields.getLoan_amount() - givenFields.getDown_payment()) * monthlyInterestRate) / (1 - Math.pow((1+monthlyInterestRate), -totalMonths));
         if (Double.isNaN(monthlyPayment)) {
-            monthlyPayment = (givenFields.getLoan_amount() - givenFields.getDown_payment()) / givenFields.getDuration();
+            monthlyPayment = (givenFields.getLoan_amount() - givenFields.getDown_payment()) / totalMonths;
         }
         List<Month> AnnuitList = new ArrayList<>();
         int counter = 1;
-        double remainingBalance = monthlyPayment * givenFields.getDuration();
+        double remainingBalance = monthlyPayment * totalMonths;
         double principal = (givenFields.getLoan_amount() - givenFields.getDown_payment());
         double percent;
-        for (int month = 1; month <= givenFields.getDuration(); month++) {
+        for (int month = 1; month <= totalMonths; month++) {
             remainingBalance -= monthlyPayment;
-            if (month >= givenFields.getPost_pone_start() && month < givenFields.getPost_pone_end() && givenFields.getPost_pone_end() < givenFields.getDuration()) {
+            if (month >= givenFields.getPost_pone_start() && month < givenFields.getPost_pone_end() && givenFields.getPost_pone_end() < totalMonths) {
                 monthlyPayment = 0;
                 counter++;
             }
-            if (givenFields.getPost_pone_end() == month && month > 1 && givenFields.getPost_pone_end() < givenFields.getDuration()) {
+            if (givenFields.getPost_pone_end() == month && month > 1 && givenFields.getPost_pone_end() < totalMonths) {
                 remainingBalance += remainingBalance * counter * monthlyInterestRate;
-                monthlyPayment = remainingBalance / (givenFields.getDuration() - month);
+                monthlyPayment = remainingBalance / (totalMonths - month);
                 principal += principal * monthlyInterestRate;
             }
             if (principal <= 0) principal = 0;
@@ -98,5 +99,9 @@ public class MonthListGenerator {
             AnnuitList.add(new Month(month,monthlyPayment, percent, Math.abs(remainingBalance)));
         }
         return AnnuitList;
+    }
+
+    public static Fields getGivenFields() {
+        return givenFields;
     }
 }
