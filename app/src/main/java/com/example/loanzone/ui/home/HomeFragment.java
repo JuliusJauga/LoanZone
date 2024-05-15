@@ -203,7 +203,6 @@ public class HomeFragment extends Fragment {
                 }
                 MainActivity mainActivity = (MainActivity)getActivity();
                 if (mainActivity != null) {
-                    binding.startMonth.setText(String.format("%d", postPoneIntStart));
                     MonthListGenerator.setFields(new Fields(loan_amount, down_payment, annual_percent, duration, postPoneIntStart,postPoneIntEnd, binding.isAnnuit.isChecked(), binding.isLinear.isChecked()));
                     mainActivity.onDataPass(Objects.requireNonNull(MonthListGenerator.generateList()));
                 }
@@ -212,7 +211,7 @@ public class HomeFragment extends Fragment {
         binding.isAnnuit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!binding.isAnnuit.isChecked() || binding.isLinear.isChecked()) {
+                if (binding.isAnnuit.isChecked() || binding.isLinear.isChecked()) {
                     binding.isLinear.setChecked(false);
                     binding.isAnnuit.setChecked(true);
                     binding.isAnnuit.setTextColor(Color.BLACK);
@@ -223,7 +222,7 @@ public class HomeFragment extends Fragment {
         binding.isLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!binding.isLinear.isChecked() || binding.isAnnuit.isChecked()) {
+                if (binding.isLinear.isChecked() || binding.isAnnuit.isChecked()) {
                     binding.isLinear.setChecked(true);
                     binding.isAnnuit.setChecked(false);
                     binding.isAnnuit.setTextColor(Color.BLACK);

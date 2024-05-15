@@ -10,7 +10,7 @@ public class NotificationsViewModel extends ViewModel {
 
     public NotificationsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("Hello! This is a loan calculator app, use the home fragment for your data input, after pressing the calculate button, you can go to dashboard fragment to see information about your loan. You can also save the data to a CSV file.");
     }
 
     public LiveData<String> getText() {

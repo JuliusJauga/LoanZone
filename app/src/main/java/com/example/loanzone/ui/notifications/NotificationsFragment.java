@@ -26,6 +26,9 @@ public class NotificationsFragment extends Fragment {
 
         final TextView textView = binding.textNotifications;
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        textView.setText("");
+        textView.setVisibility(View.VISIBLE);
         return root;
     }
 
